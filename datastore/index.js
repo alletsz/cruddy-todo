@@ -7,10 +7,15 @@ var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+exports.create = (text, callback_create) => {
+  counter.getNextUniqueId(err, function ( err, counterString) {
+    if (err) {
+      throw("error!")
+    } else {
+      
+      callback_create(text);
+    }
+  });
 };
 
 exports.readAll = (callback) => {
