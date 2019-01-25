@@ -38,14 +38,13 @@ const writeCounter = (count, callback) => {
 };
 
 // // Public API - Fix this function //////////////////////////////////////////////
-
 exports.getNextUniqueId = (callback) => { 
 // 1- call readCounter, if file exists, set counter to the number inside the file, 
 // else set counter to 0.
 
 // 2- save the current value of counter to be the nuber that we will return as a seperate variable. 
  
-  readCounter (function (err, num) {
+  readCounter(function (err, num) {
     if (err) {
       throw ('error');
     } else {

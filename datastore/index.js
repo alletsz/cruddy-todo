@@ -8,7 +8,7 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 var fileNameAndLoc = function (currentPath, name, needsTxt = true) {
-  console.log(currentPath);
+  // console.log(currentPath);
   if (needsTxt) {
     return path.join(path.join(currentPath, name + '.txt'));
   } else {
@@ -18,20 +18,19 @@ var fileNameAndLoc = function (currentPath, name, needsTxt = true) {
 };
 
 exports.create = (text, callback) => {
-  console.log("hi");
   counter.getNextUniqueId(function (err , id) {
-    // console.log("hi");
     if (err) {
       throw ('error!');
     } else {
-      // conosle.log("what up");
       var fileName = fileNameAndLoc(exports.dataDir, id);
+      // console.log('filnameeeee', fileName)
       fs.writeFile(fileName, text, (err) => {
         if (err) {
           throw ('error writing counter');
-        } 
+        } else {
+         callback(null, { id, text });
+        }
       });
-      callback(null, { id, text });
     }
   });
 // callback(null, {text, text});
@@ -42,13 +41,12 @@ exports.readAll = (callback) => {
     if (err) {
       throw ('ERROR!!!');
     } else {
-      // var data = [];
-      // for (var i = 0; i < files.length; i++) {
         var data = _.map(files, function (fileNum) {
           var id = fileNum.substring(0, fileNum.length - 4);
-          return {id, id}
+          return { id, 'text': id }
         });
-        callback(null, data)
+
+        callback(null, data);
         // var tempFileName = fileNameAndLoc(exports.dataDir, files[i], false);
         // fs.readFile(tempFileName, function (err, text) {
         //   if (err) {
@@ -71,9 +69,11 @@ exports.readAll = (callback) => {
 
 exports.readOne = (id, callback) => {
   var directory = fileNameAndLoc(exports.dataDir, id);
-  console.log(directory);
+  // console.log(directory);
+  //read file
+  //if file in directory does not exist, callback(error) else call write func
   fs.readFile(directory, (err, fileData) => {
-    console.log("stuff", text);
+    // console.log("stuff", text);
     // console.log(exports.counterFile);
     if (err) {
       callback(new Error(`No item with id: ${id}`));
