@@ -14,11 +14,11 @@ var fileNameAndLoc = function (currentPath, name, needsTxt = true) {
   } else {
     return path.join(path.join(currentPath, name));
   }
-  
+
 };
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId(function (err , id) {
+  counter.getNextUniqueId(function (err, id) {
     if (err) {
       throw ('error!');
     } else {
@@ -28,12 +28,12 @@ exports.create = (text, callback) => {
         if (err) {
           throw ('error writing counter');
         } else {
-         callback(null, { id, text });
+          callback(null, { id, text });
         }
       });
     }
   });
-// callback(null, {text, text});
+  // callback(null, {text, text});
 };
 
 exports.readAll = (callback) => {
@@ -41,29 +41,29 @@ exports.readAll = (callback) => {
     if (err) {
       throw ('ERROR!!!');
     } else {
-        var data = _.map(files, function (fileNum) {
-          var id = fileNum.substring(0, fileNum.length - 4);
-          return { id, 'text': id }
-        });
+      var data = _.map(files, function (fileNum) {
+        var id = fileNum.substring(0, fileNum.length - 4);
+        return { id, 'text': id }
+      });
 
-        callback(null, data);
-        // var tempFileName = fileNameAndLoc(exports.dataDir, files[i], false);
-        // fs.readFile(tempFileName, function (err, text) {
-        //   if (err) {
-        //     throw ('Error!');
-        //   } else {
-        //     console.log(files);
-        //     console.log(i);
-        //     var id = files[i].substring(0, files[i].length - 4); 
-        //     data.push({id, text});
-        //   }
-        // });
-        // callback(null, data);
+      callback(null, data);
+      // var tempFileName = fileNameAndLoc(exports.dataDir, files[i], false);
+      // fs.readFile(tempFileName, function (err, text) {
+      //   if (err) {
+      //     throw ('Error!');
+      //   } else {
+      //     console.log(files);
+      //     console.log(i);
+      //     var id = files[i].substring(0, files[i].length - 4); 
+      //     data.push({id, text});
+      //   }
+      // });
+      // callback(null, data);
       // }
       // console.log(data);
       // callback(null, data);
     }
-  });  
+  });
 
 };
 
@@ -79,7 +79,7 @@ exports.readOne = (id, callback) => {
       callback(new Error(`No item with id: ${id}`));
     } else {
       var text = fileData.toString('utf8');
-      callback(null, { id, text});
+      callback(null, { id, text });
     }
   });
   // var text = items[id];
@@ -92,13 +92,28 @@ exports.readOne = (id, callback) => {
 
 exports.update = (id, text, callback) => {
   var directory = fileNameAndLoc(exports.dataDir, id);
-  fs.writeFile(directory, text, (err) => {
+  fs.readFile(directory, (err, data) => {
     if (err) {
       callback(new Error(`No item with id: ${id}`));
+
     } else {
-      callback(null, { id, text });
+      fs.writeFile(directory, text, (err) => {
+        if (err) {
+          callback(new Error(`No item with id: ${id}`));
+        } else {
+          callback(null, { id, text });
+        }
+      });
     }
-  });  
+  });
+
+  // fs.writeFile(directory, text, (err) => {
+  //   if (err) {
+  //     callback(new Error(`No item with id: ${id}`));
+  //   } else {
+  //     callback(null, { id, text });
+  //   }
+  // });  
   // var item = items[id];
   // if (!item) {
   //   callback(new Error(`No item with id: ${id}`));
@@ -112,12 +127,12 @@ exports.delete = (id, callback) => {
   var directory = fileNameAndLoc(exports.dataDir, id);
   fs.unlink(directory, (err) => {
     if (err) {
-    callback(new Error(`No item with id: ${id}`));
+      callback(new Error(`No item with id: ${id}`));
     } else {
       callback();
     }
-  });  
-  
+  });
+
   // var item = items[id];
   // delete items[id];
   // if (!item) {
